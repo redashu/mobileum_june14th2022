@@ -24,7 +24,7 @@
 
 ### down side of using VM 
 
-<img src="vmdrop.png">
+<img src="drop.png">
 
 ### Understanding Os components 
 
