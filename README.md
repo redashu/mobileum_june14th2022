@@ -202,6 +202,167 @@ remote-engine *                                             tcp://172.31.91.143:
 ```
 
 
+### connection test from docker client to docker host 
+
+```
+ docker  version 
+Client:
+ Version:           20.10.13
+ API version:       1.41
+ Go version:        go1.16.15
+ Git commit:        a224086
+ Built:             Thu Mar 31 19:20:32 2022
+ OS/Arch:           linux/amd64
+ Context:           remote-engine
+ Experimental:      true
+
+Server:
+ Engine:
+  Version:          20.10.13
+  API version:      1.41 (minimum version 1.12)
+  Go version:       go1.16.15
+  Git commit:       906f57f
+  Built:            Thu Mar 31 19:21:13 2022
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.4.13
+
+```
+
+### to create container lets understanding 
+
+### OCI - 
+
+<img src="oci.png">
+
+### for container creation purpose we need container images 
+
+<img src="reg.png">
+
+## docker client side instruction to docker server 
+
+### pull 
+
+```
+ docker  images 
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+[ashu@docker-client ~]$ docker  pull  openjdk 
+Using default tag: latest
+latest: Pulling from library/openjdk
+90a00d516db1: Pull complete 
+06fc60984518: Pull complete 
+f4f239d0320f: Pull complete 
+Digest: sha256:aeea19efe712520a7e58d24bc608b2a8470406a238d2a8168838b4677ca7f651
+Status: Downloaded newer image for openjdk:latest
+docker.io/library/openjdk:latest
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ docker  images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+openjdk      latest    fd3416e1e207   3 weeks ago   464MB
+```
+
+### more images 
+
+```
+[ashu@docker-client ~]$ docker  images
+REPOSITORY    TAG       IMAGE ID       CREATED        SIZE
+busybox       latest    62aedd01bd85   6 days ago     1.24MB
+ubuntu        latest    27941809078c   7 days ago     77.8MB
+alpine        latest    e66264b98777   3 weeks ago    5.53MB
+openjdk       latest    fd3416e1e207   3 weeks ago    464MB
+hello-world   latest    feb5d9fea6a5   8 months ago   13.3kB
+```
+
+### creating containers from docker images 
+
+<img src="process.png">
+
+### create a new container 
+
+```
+ docker  run --name ashuc2  -d  alpine:latest ping facebook.com 
+221a3d1047f2114a589ca37fceca489f646ebb0f19edf93ebda81e0a1bbd09fe
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ docker  ps
+CONTAINER ID   IMAGE           COMMAND               CREATED          STATUS          PORTS     NAMES
+2274691a662a   alpine:latest   "ping facebook.com"   19 seconds ago   Up 18 seconds             test2
+a68ecf211775   alpine:latest   "ping facebook.com"   20 seconds ago   Up 19 seconds             lj1
+e959f473b010   alpine:latest   "ping facebook.com"   22 seconds ago   Up 21 seconds             baris1
+221a3d1047f2   alpine:latest   "ping facebook.com"   23 seconds ago   Up 22 seconds             ashuc2
+```
+
+### stop 
+
+```
+ docker  stop  ashuc2 
+ashuc2
+
+```
+
+### list of all the containers 
+
+```
+docker  ps  -a
+```
+
+### start 
+
+```
+ docker  start  ashuc2
+ashuc2
+[ashu@docker-client ~]$ docker  ps
+CONTAINER ID   IMAGE           COMMAND               CREATED          STATUS         PORTS     NAMES
+b8651858b9d9   alpine          "ping facebook.com"   4 minutes ago    Up 4 minutes             interesting_visvesvaraya
+221a3d1047f2   alpine:latest   "ping facebook.com"   10 minutes ago   Up 2 seconds             ashuc2
+[ashu@docker-client ~]$ 
+
+```
+
+### checking logs -- 
+
+```
+ 64  docker  logs  ashuc2 
+   65  docker  logs -f  ashuc2 
+```
+
+### kill as a replacement of stop
+
+```
+docker  kill ashuc2
+ashuc2
+
+```
+
+### access contianer shell 
+
+```
+docker  exec -it  ashuc2  sh 
+/ # cat  /etc/os-release 
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.16.0
+PRETTY_NAME="Alpine Linux v3.16"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
+/ # 
+/ # exit
+
+```
+
+### checking container filesystem 
+
+```
+docker  exec -it  ashuc2  sh 
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # exit
+
+```
 
 
 
