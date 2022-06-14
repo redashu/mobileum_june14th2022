@@ -510,5 +510,77 @@ sarkany-python   v1        59a09790997c   39 seconds ago   920MB
 ravipython       v1        6262b81a7ca3   39 seconds ago   920MB
 ```
 
+### tips 
+
+### Docker server internal filesystem 
+
+```
+ cd /var/lib/docker/
+[root@ip-172-31-91-143 docker]# ls
+buildkit  containers  image  network  overlay2  plugins  runtimes  swarm  tmp  trust  volumes
+[root@ip-172-31-91-143 docker]# 
+```
+
+### creating container from image
+
+```
+docker run -it -d --name ashuc111 ashupython:v1 
+d318d95ad838f8910825337390f65185c6f629ffa131279ca8fefcab3616a8df
+[ashu@docker-client python_images]$ docker  ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS     NAMES
+d318d95ad838   ashupython:v1   "python /ashucode/mo…"   3 seconds ago   Up 2 seconds             ashuc111
+[ashu@docker-client python_images]$ 
+
+
+```
+
+### checking container filesystem 
+
+```
+docker  exec -it ashuc111  bash 
+root@d318d95ad838:/# ls /
+ashucode  bin  boot  dev  etc  home  lib  lib64  media	mnt  opt  proc	root  run  sbin  srv  sys  tmp	usr  var
+root@d318d95ad838:/# 
+root@d318d95ad838:/# 
+root@d318d95ad838:/# ls /ashucode/
+mobi.py
+root@d318d95ad838:/# exit
+exit
+
+```
+
+ ### checking resources by containers 
+ 
+ ```
+ [ashu@docker-client ~]$ docker   stats 
+
+ ```
+ 
+ ### Dockerfile for python 
+ 
+ ```
+ FROM ubuntu
+# we are instructing docker server to pull image from Docker hub 
+# if python image is not present then it will be pulled
+LABEL name=ashutoshh
+LABEL email=ashutoshh@linux.com 
+RUN apt update ; apt install python3 -y 
+# above step is optional but incase you wanna share details with users
+RUN mkdir /ashucode 
+#  during image build run will give shell where command will be execute
+COPY mobi.py /ashucode/mobi.py 
+# copy data from docker client to docker server during image build time
+CMD ["python","/ashucode/mobi.py"]
+# is to set default process for this image 
+# bcz container can have single process so CMD will be only one 
+ 
+ ```
+ 
+ ### building image 
+ 
+ ```
+  docker  build -t ashupython:v2 -f ubuntu.dockerfile  .
+ ```
+
 
 
