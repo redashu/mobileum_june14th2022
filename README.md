@@ -364,5 +364,52 @@ bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbi
 
 ```
 
+### some docker tricks 
+
+### stopping all the containers : 
+
+```
+docker  stop  $(docker ps  -q)
+1bb45b70e7c1
+9d3eb21c8ef1
+66f6eacd586e
+d48438fc4827
+942ef9a19b73
+2158ec088ae1
+
+```
+
+### starting 
+
+```
+docker  start  $(docker  ps -qa)
+```
+### removing all non running containers 
+
+```
+docker  rm   $(docker  ps -qa)
+1bb45b70e7c1
+9d3eb21c8ef1
+17ee4ce91243
+66f6eacd586e
+
+```
+
+### remove images 
+
+```
+ docker  rmi  feb5d9fea6a5
+Untagged: hello-world:latest
+Untagged: hello-world@sha256:80f31da1ac7b312ba29d65080fddf797dd76acfb870e677f390d5acba9741b17
+Deleted: sha256:feb5d9fea6a5e9606aa995e879d862b825965ba48de054caab5ef356dc6b3412
+Deleted: sha256:e07ee1baac5fae6a26f30cabfe54a36d3402f96afda318fe0a96cec4ca393359
+[ashu@docker-client ~]$ docker  rmi  openjdk
+Untagged: openjdk:latest
+Untagged: openjdk@sha256:aeea19efe712520a7e58d24bc608b2a8470406a238d2a8168838b4677ca7f651
+Deleted: sha256:fd3416e1e2073ddf6de0d3ce75b92cc33ec4ad382b397f741369ef60266f5570
+Deleted: sha256:8f54357ef5641bfae177d2ec4cb83ca95e1a25ff4fbe24c9ebee50004f4ec71b
+Deleted: sha256:60e9643b5a9b492cfb8ec3a43b818dbdba39905dc96cd8a8d002ec57a46d689f
+```
+
 
 
