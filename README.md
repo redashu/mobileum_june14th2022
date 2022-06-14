@@ -411,5 +411,104 @@ Deleted: sha256:8f54357ef5641bfae177d2ec4cb83ca95e1a25ff4fbe24c9ebee50004f4ec71b
 Deleted: sha256:60e9643b5a9b492cfb8ec3a43b818dbdba39905dc96cd8a8d002ec57a46d689f
 ```
 
+## For container Isolation -- there is Namespace concept 
+
+<img src="ns.png">
+
+### docker is using containerd to send request 
+
+<img src="runc.png">
+
+### windows containers 
+
+<img src="hcs.png">
+
+## application containerization -- build & run 
+
+<img src="appcont1.png">
+
+### creating images using dockerfile 
+
+<img src="dfile.png">
+
+### two write some Code or dockerfile -- we are using VScode 
+
+[downloadLink](https://code.visualstudio.com/download)
+
+
+## custom docker images 
+
+### Docker image for python code 
+
+### python code 
+
+```
+import time
+
+while True:
+    print("Hello all , welcome to python..!!")
+    time.sleep(3)
+    print("Welcome to Mobileum..")
+    time.sleep(2)
+    print("Welcome to Containers by ashu ..!!")
+    print("______________________")
+    time.sleep(3)
+    
+```
+
+### dockerifle 
+
+```
+FROM python 
+# we are instructing docker server to pull image from Docker hub 
+# if python image is not present then it will be pulled
+LABEL name=ashutoshh
+LABEL email=ashutoshh@linux.com 
+# above step is optional but incase you wanna share details with users
+RUN mkdir /ashucode 
+#  during image build run will give shell where command will be execute
+COPY mobi.py /ashucode/mobi.py 
+# copy data from docker client to docker server during image build time
+CMD ["python","/ashucode/mobi.py"]
+# is to set default process for this image 
+# bcz container can have single process so CMD will be only one 
+
+```
+
+### build image 
+
+```
+s]$ cd python_images/
+[ashu@docker-client python_images]$ ls
+Dockerfile  mobi.py
+[ashu@docker-client python_images]$ docker build -t ashupython:v1 . 
+Sending build context to Docker daemon  3.584kB
+Step 1/6 : FROM python
+latest: Pulling from library/python
+e756f3fdd6a3: Already exists 
+bf168a674899: Already exists 
+e604223835cc: Already exists 
+6d5c91c4cd86: Already exists 
+2cc8d8854262: Extracting  134.3MB/196.7MB
+2767dbfeeb87: Download complete 
+9d5e973c5e10: Download complete 
+```
+
+
+### checking images 
+
+```
+ docker  images
+REPOSITORY       TAG       IMAGE ID       CREATED          SIZE
+<none>           <none>    370030ac4a43   1 second ago     920MB
+rachmanpython    v1        3aa06e4a5213   13 seconds ago   920MB
+kostaspython     v1        082a6892754c   26 seconds ago   920MB
+markpython       v1        283018bd2070   35 seconds ago   920MB
+ljubapython      v1        0a29cfc4e652   39 seconds ago   920MB
+dimitrispython   v1        16a7784b9817   39 seconds ago   920MB
+sarkany-python   v1        59a09790997c   39 seconds ago   920MB
+ravipython       v1        6262b81a7ca3   39 seconds ago   920MB
+```
+
 
 
