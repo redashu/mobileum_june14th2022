@@ -315,6 +315,28 @@ Removing login credentials for https://index.docker.io/v1/
 [ashu@docker-client shellscript]$ 
 ```
 
+### pushing image to Azure container registry  
 
+```
+
+ docker  tag  ashu:shellv1  mobashutoshh.azurecr.io/mobiimg:scriptv1 
+[ashu@docker-client shellscript]$ docker login  mobashutoshh.azurecr.io 
+Username: mobashutoshh
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ashu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[ashu@docker-client shellscript]$ docker push mobashutoshh.azurecr.io/mobiimg:scriptv1 
+The push refers to repository [mobashutoshh.azurecr.io/mobiimg]
+cc796ffa507c: Pushed 
+8484bebc3141: Pushed 
+8e78bc30dee3: Pushed 
+2d3586eacb61: Pushed 
+scriptv1: digest: sha256:2f1437e13d1b302a11c4ef4057c8672532f05df36cd24a2ad7ad2ecdef832d5f size: 1150
+[ashu@docker-client shellscript]$ docker logout  mobashutoshh.azurecr.io
+Removing login credentials for mobashutoshh.azurecr.io
+```
 
 
