@@ -339,4 +339,26 @@ scriptv1: digest: sha256:2f1437e13d1b302a11c4ef4057c8672532f05df36cd24a2ad7ad2ec
 Removing login credentials for mobashutoshh.azurecr.io
 ```
 
+### pulling image 
+
+```
+ docker pull mobashutoshh.azurecr.io/mobiimg:scriptv1
+Error response from daemon: Head https://mobashutoshh.azurecr.io/v2/mobiimg/manifests/scriptv1: unauthorized: authentication required, visit https://aka.ms/acr/authorization for more information.
+fire@node155:~$ 
+fire@node155:~$ 
+fire@node155:~$ 
+fire@node155:~$ docker  login  mobashutoshh.azurecr.io -u mobashutoshh 
+Password: 
+WARNING! Your password will be stored unencrypted in /home/fire/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+fire@node155:~$ docker pull mobashutoshh.azurecr.io/mobiimg:scriptv1
+scriptv1: Pulling from mobiimg
+a4df6f21af84: Downloading [=========================>                         ]  46.48MB/90.36MB
+89b2bdaadae
+```
+
+
 
