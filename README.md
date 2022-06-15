@@ -199,3 +199,72 @@ Su Mo Tu We Th Fr Sa
 
 ```
 
+### Dockerfile for shell scripting 
+
+### 
+
+```
+FROM oraclelinux:8.4
+LABEL email=ashutoshh@linux.com
+ENV un=ramesh
+# use of ENV in dockerfile to set some env variable with default value
+RUN mkdir /code 
+COPY test.sh /code/
+WORKDIR /code
+RUN chmod +x test.sh 
+ENTRYPOINT ["./test.sh"]
+
+```
+
+==
+
+```
+#!/bin/bash
+
+if  [ "$un" == "ashu"  ]
+then
+    echo "Hello $un .."
+    echo "running few commands .."
+    date ; ls 
+    sleep 10 
+
+elif  [ "$un" == "jack"  ]
+then
+    echo "Hey $un "
+    cal  ; uptime 
+    sleep 10 
+
+else 
+    echo "hey $un nice to see you here.."
+    uptime 
+    sleep 10 
+fi 
+```
+
+### after build lets test 
+
+```
+docker run -it --rm  ashu:shellv1  
+hey ramesh nice to see you here..
+ 10:36:51 up  3:13,  0 users,  load average: 0.80, 0.38, 1.75
+[ashu@docker-client ~]$ docker run -it --rm  -e un=ashu      ashu:shellv1  
+Hello ashu ..
+running few commands ..
+Wed Jun 15 10:37:51 UTC 2022
+test.sh
+[ashu@docker-client ~]$ docker run -it --rm  -e un=jack     ashu:shellv1  
+Hey jack 
+      June 2022     
+Su Mo Tu We Th Fr Sa
+          1  2  3  4
+ 5  6  7  8  9 10 11
+12 13 14 15 16 17 18
+19 20 21 22 23 24 25
+26 27 28 29 30      
+                    
+ 10:38:10 up  3:15,  0 users,  load average: 0.33, 0.32, 1.62
+```
+
+
+
+
