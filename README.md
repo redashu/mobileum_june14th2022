@@ -360,5 +360,50 @@ a4df6f21af84: Downloading [=========================>                         ] 
 89b2bdaadae
 ```
 
+## Container restart policy 
+
+### container can go to stop state by number of resion 
+
+<img src="restart.png">
+
+### type of restart policy 
+
+<img src="rtype.png">
+
+
+### checking restart policy 
+
+```
+ docker  inspect  c1 --format='{{.Id}}'
+05713d95955251eb0d885bfad472b5f250cc86ea344388493a051c8914e5d716
+[ashu@docker-client ~]$ docker  inspect  c1 --format='{{.State.Status}}'
+running
+[ashu@docker-client ~]$ docker  inspect  c1 --format='{{.HostConfig.RestartPolicy.Name}}'
+no
+
+```
+
+### adding restart policy 
+
+```
+ docker  run -itd  --name c2 --restart always  busybox ping localhost
+Unable to find image 'busybox:latest' locally
+latest: Pulling from library/busybox
+19d511225f94: Pull complete 
+Digest: sha256:3614ca5eacf0a3a1bcc361c939202a974b4902b9334ff36eb29ffe9011aaad83
+Status: Downloaded newer image for busybox:latest
+ee7b260a4a463cf13548afc0fa331cec846cb87c4d4b83d4327c360e258f1721
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ docker  ps
+CONTAINER ID   IMAGE     COMMAND            CREATED         STATUS         PORTS     NAMES
+ee7b260a4a46   busybox   "ping localhost"   4 seconds ago   Up 2 seconds             c2
+05713d959552   alpine    "/bin/sh"          4 minutes ago   Up 4 minutes             c1
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ docker  inspect  c2  --format='{{.HostConfig.RestartPolicy.Name}}'
+always
+
+```
+
 
 
