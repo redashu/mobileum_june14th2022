@@ -484,5 +484,75 @@ exit
 
 <img src="cn.png">
 
+### by default docker is having 3 network bridge 
+
+```
+docker  network  ls
+NETWORK ID     NAME      DRIVER    SCOPE
+e61fe46bdccc   bridge    bridge    local
+614a93e30fc4   host      host      local
+ef13a374ff97   none      null      local
+```
+
+### inspect 
+
+```
+docker  network  inspect  e61fe46bdccc
+[
+    {
+        "Name": "bridge",
+        "Id": "e61fe46bdccc225dc40c12e139ebfc7a870cbb3e10f49239fd3243992aa80394",
+        "Created": "2022-06-15T12:50:04.094078212Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+
+```
+
+### creating container and check ip address
+
+```
+docker  exec -it  ashuc1  ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:AC:11:00:02  
+          inet addr:172.17.0.2  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:10 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:860 (860.0 B)  TX bytes:0 (0.0 B)
+```
+
+### inspecting container metadata 
+
+```
+docker  inspect  ashuc1 --format='{{.NetworkSettings.IPAddress}}'
+172.17.0.2
+
+```
+
+### container can connect to each other 
+
+```
+docker  exec  -it ashuc1  sh
+/ # ping 172.17.0.3
+PING 172.17.0.3 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.116 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.110 ms
+^C
+--- 172.17.0.3 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.110/0.113/0.116 ms
+/ # exit
+
+```
+
 
 
