@@ -66,5 +66,12 @@ CMD ["while.py"]
 # ENTrypoint is same as CMD 
 ```
 
+### to create containers 
+
+```
+docker  run -itd --name ashuc3 ashualp:v3
+docker  run -itd --name ashuc4 ashualp:v3 mobi.py 
+
+```
 
 
