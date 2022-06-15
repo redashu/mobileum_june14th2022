@@ -405,5 +405,68 @@ always
 
 ```
 
+### namespaces in containers 
+
+<img src="ns.png">
+
+### container is just a process for linux kernel 
+
+```
+# ps -e  |   grep 29034
+29034 pts/0    00:00:00 bash
+[root@ip-172-31-91-143 ~]# ps -e  |   grep 29807
+29807 pts/0    00:00:00 ping
+[root@ip-172-31-91-143 ~]# 
+[root@ip-172-31-91-143 ~]# 
+[root@ip-172-31-91-143 ~]# kill -9 29807
+[root@ip-172-31-91-143 ~]# cd  /proc/29962
+[root@ip-172-31-91-143 29962]# ls
+arch_status  cmdline          exe      limits     mounts      oom_score      root       smaps_rollup  task
+attr         comm             fd       loginuid   mountstats  oom_score_adj  sched      stack         timens_offsets
+autogroup    coredump_filter  fdinfo   map_files  net         pagemap        schedstat  stat          timers
+auxv         cpuset           gid_map  maps       ns          patch_state    sessionid  statm         timerslack_ns
+cgroup       cwd              io       mem        numa_maps   personality    setgroups  status        uid_map
+clear_refs   environ          latency  mountinfo  oom_adj     projid_map     smaps      syscall       wchan
+[root@ip-172-31-91-143 29962]# cd  ns/
+[root@ip-172-31-91-143 ns]# ls
+cgroup  ipc  mnt  net  pid  pid_for_children  time  time_for_children  user  uts
+[root@ip-172-31-91-143 ns]# 
+
+```
+
+
+### 
+
+```
+ nsenter   -t  29962  --uts --mount  sh 
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # ls /home
+/ # mkdir  /ashutoshh
+/ # ls
+ashutoshh  dev        home       media      opt        root       sbin       sys        usr
+bin        etc        lib        mnt        proc       run        srv        tmp        var
+/ # ifconfig 
+ifconfig: /proc/net/dev: No such file or directory
+docker0   Link encap:Ethernet  HWaddr 02:42:23:18:B6:1F  
+          inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth0      Link encap:Ethernet  HWaddr 12:C3:15:AD:DA:DF  
+          inet addr:172.31.91.143  Bcast:172.31.95.255  Mask:255.255.240.0
+          UP BROADCAST RUNNING MULTICAST  MTU:9001  Metric:1
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+
+/ # 
+[root@ip-172-31-91-143 ~]# nsenter   -t  29962  --net  sh 
+sh-4.2# ls /
+bin  boot  dev	etc  home  lib	lib64  local  media  mnt  opt  proc  root  run	sbin  srv  sys	tmp  usr  var
+sh-4.2# exit
+exit
+
+```
 
 
