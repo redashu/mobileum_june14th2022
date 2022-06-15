@@ -480,5 +480,9 @@ exit
  docker  run -itd --name ashulm1  --memory 400M alpine
  docker  run -itd --name ashulm2  --memory 400M  --cpu-shares=20  alpine
 ```
+## getting stated with container networking 
+
+<img src="cn.png">
+
 
 
