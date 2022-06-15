@@ -66,6 +66,15 @@ CMD ["while.py"]
 # ENTrypoint is same as CMD 
 ```
 
+### dockeringore file 
+
+```
+Dockerfile
+*.dockerfile
+.dockerignore
+
+```
+
 ### to create containers 
 
 ```
