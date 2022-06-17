@@ -679,6 +679,35 @@ mysql> show databases;
 6 rows in set (0.00 sec)
 
 ```
+### volumes and containers relation 
+
+<img src="rel.png">
+
+
+### mounting volume inside contianer with readonly access
+
+```
+ docker run -it --rm -v ashudb-vol1:/mnt/db:ro  alpine 
+/ # 
+/ # 
+/ # cd /mnt/
+/mnt # ls
+db
+/mnt # cd db/
+/mnt/db # ls
+#ib_16384_0.dblwr   binlog.000001       ca.pem              ib_logfile1         mysql               server-cert.pem
+#ib_16384_1.dblwr   binlog.000002       client-cert.pem     ibdata1             mysql.ibd           server-key.pem
+#innodb_temp        binlog.000003       client-key.pem      ibtmp1              performance_schema  sys
+94110cd8e1c3.err    binlog.index        ib_buffer_pool      infodb              private_key.pem     undo_001
+auto.cnf            ca-key.pem          ib_logfile0         mobiashu            public_key.pem      undo_002
+/mnt/db # mkdir hello
+mkdir: can't create directory 'hello': Read-only file system
+/mnt/db # rm  auto.cnf 
+rm: remove 'auto.cnf'? y
+rm: can't remove 'auto.cnf': Read-only file system
+/mnt/db # exit
+```
+
 
 
 
