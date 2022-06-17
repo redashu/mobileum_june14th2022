@@ -775,6 +775,66 @@ docker volume create portainer_data
 docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:2.11.1
 ```
 
+## Dockerfile -- for frontend html / css /js based app 
+
+### info about web server 
+<img src="web.png">
+
+### nginx based dockerfile 
+## source code 
+
+```
+git clone https://github.com/yenchiah/project-website-template.git
+```
+
+### dockerfile 
+
+```
+FROM nginx
+LABEL email=ashutoshh@linux.com
+COPY . /usr/share/nginx/html/
+# from dockerfile location copy all the data to newly creating docker image
+# copy and add both can avoid dockerignore file
+# if  we are not using CMD / ENTRYPOINT then from image
+# cmd / entrypoint will be inherited 
+```
+
+### .dockerignorefile 
+
+```
+Dockerfile
+.dockerignore
+LICENSE
+*.md
+.gitignore
+.git 
+
+```
+### image build 
+
+```
+docker build -t ashunginx:v1  . 
+Sending build context to Docker daemon  1.004MB
+Step 1/3 : FROM nginx
+ ---> 0e901e68141f
+Step 2/3 : LABEL email=ashutoshh@linux.com
+ ---> Running in d06c06972c0d
+Removing intermediate container d06c06972c0d
+ ---> 2d885500a8ae
+Step 3/3 : COPY . /usr/share/nginx/html/
+ ---> 592fb2fa3392
+Successfully built 592fb2fa3392
+Successfully tagged ashunginx:v1
+```
+
+### creating container 
+
+```
+docker run -d --name ashuweb1 -p 1122:80 ashunginx:v1
+```
+
+
+
 
 
 
