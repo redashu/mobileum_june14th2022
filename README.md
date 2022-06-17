@@ -248,7 +248,7 @@ round-trip min/avg/max = 1.757/1.798/1.845 ms
 
 ### port forwarding 
 
-<img src="porft.png">
+<img src="portf.png">
 
 ###
 
