@@ -384,6 +384,19 @@ round-trip min/avg/max = 0.057/0.069/0.081 ms
 ```
 
 
+### Docker bridge networking drivers 
+
+<img src="driver.png">
+
+### MACvlan 
+
+<img src="macvlan.png">
+
+```
+docker  network create  ashubr007  --subnet  192.168.1.0/24  --gateway 192.168.1.254  --driver macvlan -o parent=ens33  
+```
+
+### Note: macvlan understand  trunk protocol also 
 
 
 
