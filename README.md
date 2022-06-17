@@ -556,6 +556,129 @@ mysql> show databases;
 
 <img src="vol.png">
 
+## create Volume 
+
+```
+docker volume  create  ashudb-vol1 
+ashudb-vol1
+[ashu@docker-client mobi-dockerimages]$ docker  volume  ls
+DRIVER    VOLUME NAME
+local     ashudb-vol1
+[ashu@docker-client mobi-dockerimages]$ 
+```
+
+### docker volume is creating a directory on the server side 
+
+```
+[ashu@docker-client mobi-dockerimages]$ docker volume  inspect  ashudb-vol1
+[
+    {
+        "CreatedAt": "2022-06-17T12:44:15Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/opt/docker/volumes/ashudb-vol1/_data",
+        "Name": "ashudb-vol1",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+```
+
+### creating container using volume 
+
+```
+docker run -itd --name ashumysqlc1 -e MYSQL_ROOT_PASSWORD="123456#"  -v ashudb-vol1:/var/lib/mysql    mysql
+```
+
+### login to db 
+
+```
+[ashu@docker-client mobi-dockerimages]$ docker  exec -it ashumysqlc1  bash 
+root@94110cd8e1c3:/# mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.29 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+```
+
+### after login create some database 
+
+```
+mysql> create database mobiashu;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> create database infodb;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| infodb             |
+| information_schema |
+| mobiashu           |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+6 rows in set (0.01 sec)
+
+mysql> exit
+Bye
+```
+
+### remove container 
+
+```
+docker  kill  ashumysqlc1  ; docker rm ashumysqlc1
+ashumysqlc1
+ashumysqlc1
+```
+
+### lets recreate container  and check databases 
+
+```
+docker run -itd --name ashumysqlc1 -e MYSQL_ROOT_PASSWORD="123456#"  -v ashudb-vol1:/var/lib/mysql    mysql 
+4a23869ddccfa4de540ccbc565efe227568a7ceae2ed6ba3e3912aaae14d7d89
+[ashu@docker-client mobi-dockerimages]$ 
+[ashu@docker-client mobi-dockerimages]$ docker  exec -it ashumysqlc1  bash 
+root@4a23869ddccf:/# mysql -u root -p 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.29 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases; 
++--------------------+
+| Database           |
++--------------------+
+| infodb             |
+| information_schema |
+| mobiashu           |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+6 rows in set (0.00 sec)
+
+```
 
 
 
