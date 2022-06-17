@@ -919,6 +919,31 @@ docker-compose  down
  ⠿ Network ashu-compose_default  Removed   
 ```
 
+### compsoe file 2
+
+```
+version:  "3.8" # compose file version 
+services: # info about containers 
+  ashuapp2:
+    image: nginx
+    container_name: ashucc33
+    ports:
+    - "1199:80"
+  ashudb1:
+    image: mysql
+    container_name: ashudbc1
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456#"
+    restart: always 
+  ashuapp1: # name of app which can be anything 
+    image: alpine
+    container_name: ashucc11
+    command: ping fb.com 
+    restart: always 
+
+
+```
+
 
 
 
