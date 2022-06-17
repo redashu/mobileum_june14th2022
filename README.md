@@ -833,7 +833,91 @@ Successfully tagged ashunginx:v1
 docker run -d --name ashuweb1 -p 1122:80 ashunginx:v1
 ```
 
+### docker scripting using compose 
 
+<img src="compose.png">
+
+### installing docker-compose on client side 
+
+```
+ curl -SL https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-linux-x86_64       -o /usr/bin/docker-compose 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 24.7M  100 24.7M    0     0   140M      0 --:--:-- --:--:-- --:--:--  140M
+[root@docker-client ~]# 
+[root@docker-client ~]# chmod +x /usr/bin/docker-compose 
+[root@docker-client ~]# docker-compose -v
+Docker Compose version v2.6.0
+[root@docker-client ~]# 
+
+
+```
+
+### how to write compose script 
+
+### some info about COmpose file 
+
+<img src="cfile.png">
+
+
+
+### example 1 
+
+```
+
+version:  "3.8" # compose file version 
+services: # info about containers 
+  ashuapp1: # name of app which can be anything 
+    image: alpine
+    container_name: ashucc11
+    command: ping fb.com 
+    restart: always 
+
+```
+
+### run 
+
+```
+ ls
+docker-compose.yaml
+[ashu@docker-client ashu-compose]$ docker-compose up -d 
+[+] Running 2/2
+ ⠿ Network ashu-compose_default  Created                                                      0.1s
+ ⠿ Container ashucc11            Started                                                      0.9s
+[ashu@docker-client ashu-compose]$ docker-compose  ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+ashucc11            "ping fb.com"       ashuapp1            running             
+[ashu@docker-client ashu-compose]$ 
+
+```
+
+### more compose operations 
+
+```
+docker-compose  kill
+[+] Running 1/1
+ ⠿ Container ashucc11  Killed                                                                 0.2s
+[ashu@docker-client ashu-compose]$ docker-compose  ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+ashucc11            "ping fb.com"       ashuapp1            exited (137)        
+[ashu@docker-client ashu-compose]$ docker-compose  start
+[+] Running 1/1
+ ⠿ Container ashucc11  Started                                                                0.7s
+[ashu@docker-client ashu-compose]$ docker-compose  ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+ashucc11            "ping fb.com"       ashuapp1            running             
+[ashu@docker-client ashu-compose]$ 
+```
+
+### clean up 
+
+```
+docker-compose  down 
+[+] Running 2/2
+ ⠿ Container ashucc11            Removed                                                     10.3s
+ ⠿ Network ashu-compose_default  Removed   
+```
 
 
 
