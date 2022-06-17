@@ -708,6 +708,61 @@ rm: can't remove 'auto.cnf': Read-only file system
 /mnt/db # exit
 ```
 
+### volume in docker host / server side 
+
+```
+ cd /opt/docker/
+[root@ip-172-31-91-143 docker]# ls
+buildkit  containers  image  network  overlay2  plugins  runtimes  swarm  tmp  trust  volumes
+[root@ip-172-31-91-143 docker]# cd volumes/
+[root@ip-172-31-91-143 volumes]# ls
+2c23772e8b7a652bd95b85c2187fb891e871fee0bca6798fba1badfe844e3df4  ljuba-vol1
+40916622652bd70b5414f8160f2e05daa7bd0e7c81c44b55b0cd4c7d7f543355  makeshdb-vol
+58fba2e63875ca8a2b78c9c6aa49a08d08d0f1f7c456f39316420d77b90ec6b3  makeshdb1-vol
+5df8e382e2ea4720ef647802a57ae4b4c1cd345019da9d1433ba4bb583fa9cb6  mark-vol1
+83103f8eb0688431c712a5254ec9325e5cbc5395b719ec8d811cdd9ba6a473ae  metadata.db
+83be186778b7c8572a79ffecedb591b2ab046125e8e40452c70395ef3175a1aa  mik-vol1
+8aefb577bec24811677e995886fa9a458468f40668e5691b2bd4cd752b9dd082  naryan_vol
+abhi-vol1                                                         neildb-vol1
+ashudb-vol1                                                       neildb_vol1
+backingFsBlockDev                                                 peterdb-vol1
+calin-vol1                                                        prasad-vol1
+cc72cfe6ee99e4bbd8bc965a24837c2cf4463e4c076b8ecd2e52466f66912275  rachmandb-vol1
+cf6425fb7dfb18b58c00ea01f3a92106ab6bafa3ff33a7df78720b981dcea253  ravidb-vol1
+fervol1                                                           som-vol1
+istvan-vol1                                                       som-vol2
+jjvol1                                                            som-vol4
+karthivol1                                                        sridbvol1
+kostas-vol1                                                       yasmin
+[root@ip-172-31-91-143 volumes]# cd  ashudb-vol1/
+[root@ip-172-31-91-143 ashudb-vol1]# ls
+_data
+[root@ip-172-31-91-143 ashudb-vol1]# cd _data/
+[root@ip-172-31-91-143 _data]# ls
+#ib_16384_0.dblwr  auto.cnf       binlog.index     client-key.pem  ibdata1   mysql               public_key.pem   undo_001
+#ib_16384_1.dblwr  binlog.000001  ca-key.pem       ib_buffer_pool  ibtmp1    mysql.ibd           server-cert.pem  undo_002
+#innodb_temp       binlog.000002  ca.pem           ib_logfile0     infodb    performance_schema  server-key.pem
+94110cd8e1c3.err   binlog.000003  client-cert.pem  ib_logfile1  
+```
+
+### also we can check using df 
+
+```
+ df 
+Filesystem     1K-blocks     Used Available Use% Mounted on
+devtmpfs         8088408        0   8088408   0% /dev
+tmpfs            8096916        0   8096916   0% /dev/shm
+tmpfs            8096916     1724   8095192   1% /run
+tmpfs            8096916        0   8096916   0% /sys/fs/cgroup
+/dev/nvme0n1p1 104845292 12194456  92650836  12% /
+tmpfs            1619384        0   1619384   0% /run/user/1000
+/dev/nvme1n1   524032000  6083896 517948104   2% /opt/docker
+overlay        524032000  6083896 517948104   2% /opt/docker/overlay2/915612fb5444cb1145082ca4a294d12d3f2b4d3fa8376e5d60a96e98a2ffe3ca/merged
+overlay        524032000  6083896 517948104   2% /opt/docker/overlay2/d468f03bd595b14af91fa52b034a2685e74ddd0de43476daf548a2ae0861eb69/merged
+overlay        524032000  6083896 517948104   2% /opt/docker/overlay2/f11a262eaf7d74093e9e8d33a3d5bd8b7cca95a2dd43440c06bd04ca1ae76cc6/merged
+overlay        524032000  6083896 517948104   
+```
+
 
 
 
