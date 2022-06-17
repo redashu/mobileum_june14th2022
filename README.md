@@ -272,4 +272,118 @@ f4de25d55bd6   nginx     "/docker-entrypoint.…"   3 seconds ago    Up 1 second
 b0452373b1e6   nginx     "/docker-entrypoint.…"   32 seconds ago   Up 30 seconds   0.0.0.0:1235->80/tcp, :::1235->80/tcp   ashuwebc1
 ```
 
+### container without any network 
+
+```
+ef13a374ff97   none      null      local
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ docker  run -it --rm  --network none  alpine 
+/ # ping google.com 
+ping: bad address 'google.com'
+/ # ping 172.17.0.1
+PING 172.17.0.1 (172.17.0.1): 56 data bytes
+ping: sendto: Network unreachable
+/ # ifconfig 
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # exit
+
+```
+
+### problem with default docker bridge 
+
+<img src="prob1.png">
+
+### creating custom bridge 
+
+```
+docker  network create  ashubr1
+a7d8adcfc19fa7b3891b971634a96bca5f25069f872b35e2448047c47e39a7c0
+[ashu@docker-client ~]$ docker  network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+a7d8adcfc19f   ashubr1   bridge    local
+feb56cc9d6db   bridge    bridge    local
+614a93e30fc4   host      host      local
+ef13a374ff97   none      null      local
+[ashu@docker-client ~]$ docker  network inspect  ashubr1
+[
+    {
+        "Name": "ashubr1",
+        "Id": "a7d8adcfc19fa7b3891b971634a96bca5f25069f872b35e2448047c47e39a7c0",
+        "Created": "2022-06-17T09:07:50.096097609Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.19.0.0/16",
+                    "Gateway": "172.19.0.1"
+
+```
+
+### choose 
+
+```
+docker  network create  ashubr2  --subnet  192.168.100.0/24  --gateway 192.168.100.1 
+dcf240b7d99b93deae4d704c353930ee12ae2c918886d036ecc192c2fa49bcac
+[ashu@docker-client ~]$ docker  network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+a7d8adcfc19f   ashubr1   bridge    local
+dcf240b7d99b   ashubr2   bridge    local
+```
+
+### testing container access by name 
+
+```
+ docker  run -dit --name ashuc3  --network ashubr1  alpine
+210c47780e6eb1df00ead387b873651029a38a22f304cc4e3edb146130edd1b6
+[ashu@docker-client ~]$ docker  run -dit --name ashuc4  --network ashubr1  alpine
+18ff48075193959747212ab7279497e088858d13da4ba93d449c38b98889aec6
+[ashu@docker-client ~]$ docker exec -it ashuc3  sh 
+/ # ping ashuc4
+PING ashuc4 (172.19.0.3): 56 data bytes
+64 bytes from 172.19.0.3: seq=0 ttl=64 time=0.082 ms
+64 bytes from 172.19.0.3: seq=1 ttl=64 time=0.080 ms
+^C
+--- ashuc4 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.080/0.081/0.082 ms
+/ # exit
+
+```
+
+### static ip to container 
+
+```
+docker  run -dit --name ashuc5  --network ashubr2  alpine
+53c2ec457db8378d757779a64470205e62647a5db4a1a40ed6b8c2636061a592
+[ashu@docker-client ~]$ docker  run -dit --name ashuc6 --ip 192.168.100.20  --network ashubr2  alpine
+66aa0aa910e21f2a2fb5ba362964de9f803fcc6b8830cf6b056ff6db2f15eb6e
+[ashu@docker-client ~]$ docker exec -it ashuc5  sh 
+/ # ping ashuc6
+PING ashuc6 (192.168.100.20): 56 data bytes
+64 bytes from 192.168.100.20: seq=0 ttl=64 time=0.057 ms
+64 bytes from 192.168.100.20: seq=1 ttl=64 time=0.081 ms
+^C
+--- ashuc6 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.057/0.069/0.081 ms
+/ # exit
+
+```
+
+
+
+
 
