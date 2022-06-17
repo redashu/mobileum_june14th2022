@@ -469,6 +469,90 @@ DAEMON_PIDFILE_TIMEOUT=10
 
 ```
 
+### container storage --
+
+<img src="cst.png">
+
+## creating mysql container
+
+```
+ docker  run -d  --name ashudb1  -e MYSQL_ROOT_PASSWORD="123456#" mysql 
+Unable to find image 'mysql:latest' locally
+latest: Pulling from library/mysql
+c1ad9731b2c7: Pull complete 
+54f6eb0ee84d: Pull complete 
+cffcf8691bc5: Pull complete 
+89a783b5ac8a: Pull complete 
+6a8393c7be5f: Pull complete 
+af768d0b181e: Pull complete 
+810d6aaaf54a: Pull complete 
+2e014a8ae4c9: Pull complete 
+a821425a3341: Pull complete 
+3a10c2652132: Pull complete 
+4419638feac4: Pull complete 
+681aeed97dfe: Pull complete 
+Digest: sha256:548da4c67fd8a71908f17c308b8ddb098acf5191d3d7694e56801c6a8b2072cc
+Status: Downloaded newer image for mysql:latest
+6de7ee2589b4145828213192ca7400468301f634b2e5c452a311d990cf364668
+[ashu@docker-client mobi-dockerimages]$ docker  ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                 NAMES
+6de7ee2589b4   mysql     "docker-entrypoint.s…"   4 seconds ago   Up 2 seconds   3306/tcp, 33060/tcp   ashudb1
+```
+
+### lets connect to db server
+
+```
+docker  exec -it  ashudb1  bash 
+root@6de7ee2589b4:/# 
+root@6de7ee2589b4:/# 
+root@6de7ee2589b4:/# cat  /etc/os-release 
+PRETTY_NAME="Debian GNU/Linux 10 (buster)"
+NAME="Debian GNU/Linux"
+VERSION_ID="10"
+VERSION="10 (buster)"
+VERSION_CODENAME=buster
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+root@6de7ee2589b4:/# mysql  -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.29 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> 
+```
+
+### created one database 
+
+```
+mysql> create database  ashumobi;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ashumobi           |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+```
+
+
 
 
 
