@@ -461,6 +461,14 @@ DAEMON_PIDFILE_TIMEOUT=10
 
 ```
 
+### sync previous data to new locaiton 
+
+```
+ rsync -arpv /var/lib/docker/ /opt/docker/
+ systemctl restart docker
+
+```
+
 
 
 
