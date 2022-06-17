@@ -552,6 +552,10 @@ mysql> show databases;
 
 ```
 
+### Docker volume to solve problem 
+
+<img src="vol.png">
+
 
 
 
