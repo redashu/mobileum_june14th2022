@@ -404,6 +404,63 @@ docker  network create  ashubr007  --subnet  192.168.1.0/24  --gateway 192.168.1
 <img src="ipvlan.png">
 
 
+## Storage in Docker 
+
+<img src="storage.png">
+
+### your storage team will be doing this for you on docker server side 
+
+```
+[root@ip-172-31-91-143 ~]# lsblk 
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+nvme0n1       259:0    0  100G  0 disk 
+|-nvme0n1p1   259:1    0  100G  0 part /
+`-nvme0n1p128 259:2    0    1M  0 part 
+[root@ip-172-31-91-143 ~]# lsblk 
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+nvme0n1       259:0    0  100G  0 disk 
+|-nvme0n1p1   259:1    0  100G  0 part /
+`-nvme0n1p128 259:2    0    1M  0 part 
+nvme1n1       259:3    0  500G  0 disk 
+[root@ip-172-31-91-143 ~]# mkfs.xfs   /dev/nvme1n1
+meta-data=/dev/nvme1n1           isize=512    agcount=16, agsize=8192000 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=0
+data     =                       bsize=4096   blocks=131072000, imaxpct=25
+         =                       sunit=1      swidth=1 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=64000, version=2
+         =                       sectsz=512   sunit=1 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+[root@ip-172-31-91-143 ~]# mkdir /opt/docker
+[root@ip-172-31-91-143 ~]# mount  /dev/nvme1n1  /opt/docker/
+[root@ip-172-31-91-143 ~]# vim /etc/fstab 
+[root@ip-172-31-91-143 ~]# mount -a
+```
+
+### Docker engineering will do only this 
+
+```
+cat  /etc/sysconfig/docker
+# The max number of open files for the daemon itself, and all
+# running containers.  The default value of 1048576 mirrors the value
+# used by the systemd service unit.
+DAEMON_MAXFILES=1048576
+
+# Additional startup options for the Docker daemon, for example:
+# OPTIONS="--ip-forward=true --iptables=true"
+# By default we limit the number of open files per container
+OPTIONS="--default-ulimit nofile=32768:65536 -H tcp://0.0.0.0:2375 -g /opt/docker"
+
+# How many seconds the sysvinit script waits for the pidfile to appear
+# when starting the daemon.
+DAEMON_PIDFILE_TIMEOUT=10
+[root@ip-172-31-91-143 ~]# systemctl daemon-reload 
+[root@ip-172-31-91-143 ~]# systemctl restart docker 
+
+
+```
+
 
 
 
