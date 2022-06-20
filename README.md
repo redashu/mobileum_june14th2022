@@ -44,17 +44,18 @@ LICENSE
 .git
 ```
 
-### docker-compose file 
+### java-compose.yaml file 
 
 ```
 version: '3.8'
 services:
   ashuapp6:
     image: ashutomcat:v1 # this image will be build  
-    build: . # location of dockerfile
-    container_name: ashuc1
+    build:  # build docker image 
+      context: java-springboot # location of dockerfile 
+    container_name: ashuc11111
     ports:
-    - "1122:8080"
+    - "1009:8080"
 ```
 
 ### running compose 
