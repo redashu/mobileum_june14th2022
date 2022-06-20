@@ -255,6 +255,16 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 <img src="minion.png">
 
 
+### how docker created containers 
+
+<img src="d2c.png">
+
+
+### POd introduction 
+
+<img src="pod.png">
+
+
 
 
 
