@@ -137,6 +137,103 @@ Successfully tagged ashuciapp:testv1
 
 <img src="k8sinfo.png">
 
+### Understanding k8s architecture 
+
+### k8s client installation 
+
+```
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   154  100   154    0     0   3623      0 --:--:-- --:--:-- --:--:--  3666
+100 43.5M  100 43.5M    0     0   154M      0 --:--:-- --:--:-- --:--:--  154M
+[root@docker-client ~]# ls
+kubectl  users.txt
+[root@docker-client ~]# mv kubectl  /usr/bin/
+[root@docker-client ~]# chmod +x /usr/bin/kubectl 
+[root@docker-client ~]# 
+
+```
+
+### verify 
+
+```
+ kubectl  version --client -o yaml 
+clientVersion:
+  buildDate: "2022-06-15T14:22:29Z"
+  compiler: gc
+  gitCommit: f66044f4361b9f1f96f0053dd46cb7dce5e990a8
+  gitTreeState: clean
+  gitVersion: v1.24.2
+  goVersion: go1.18.3
+  major: "1"
+  minor: "24"
+  platform: linux/amd64
+kustomizeVersion: v4.5.4
+```
+
+### k8s architecture 
+
+### level 1 
+
+<img src="k8sarch1.png">
+
+### level 2  kube-apiserver 
+
+<img src="apiserver.png">
+
+### on control plane auth file location 
+
+```
+/etc/kubernets/admin.conf 
+```
+
+### checking auth with client 
+
+```
+ kubectl   get  nodes 
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ kubectl   get  nodes --kubeconfig admin.conf 
+NAME            STATUS   ROLES           AGE     VERSION
+control-plane   Ready    control-plane   6h48m   v1.24.2
+minion1         Ready    <none>          6h47m   v1.24.2
+minion2         Ready    <none>          6h47m   v1.24.2
+minion3         Ready    <none>          6h47m   v1.24.2
+```
+
+### alternative method 
+
+```
+ export KUBECONFIG=/home/ashu/admin.conf 
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ kubectl   get  nodes 
+NAME            STATUS   ROLES           AGE     VERSION
+control-plane   Ready    control-plane   6h51m   v1.24.2
+minion1         Ready    <none>          6h50m   v1.24.2
+minion2         Ready    <none>          6h50m   v1.24.2
+minion3         Ready    <none>          6h50m   v1.24.2
+```
+
+### or 
+
+```
+ mkdir  ~/.kube 
+mkdir: cannot create directory ‘/home/ashu/.kube’: File exists
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ ls
+admin.conf  mobi-dockerimages
+[ashu@docker-client ~]$ cp -v admin.conf   ~/.kube/config 
+‘admin.conf’ -> ‘/home/ashu/.kube/config’
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ 
+[ashu@docker-client ~]$ kubectl  get  nodes
+NAME            STATUS   ROLES           AGE     VERSION
+control-plane   Ready    control-plane   6h53m   v1.24.2
+minion1         Ready    <none>          6h52m   v1.24.2
+minion2         Ready    <none>          6h52m   v1.24.2
+minion3         Ready    <none>          6h52m   v1.24.2
+```
 
 
 
