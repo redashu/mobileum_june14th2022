@@ -297,6 +297,50 @@ ashupod-123   1/1     Running   0          18s
 
 ```
 
+### Some troubleshooting watchout 
 
+<img src="podstr.png">
+
+### job of kube-schedular 
+
+<img src="sch.png">
+
+### more details about pod 
+
+```
+[ashu@docker-client ~]$ kubectl get  po   ashupod-123  -o wide 
+NAME          READY   STATUS    RESTARTS   AGE   IP                NODE      NOMINATED NODE   READINESS GATES
+ashupod-123   1/1     Running   0          17m   192.168.179.195   minion2   <none>           <none>
+[ashu@docker-client ~]$ 
+
+
+[ashu@docker-client ~]$ kubectl get  po -o wide 
+NAME             READY   STATUS    RESTARTS   AGE     IP                NODE      NOMINATED NODE   READINESS GATES
+abhipod-123      1/1     Running   0          15m     192.168.179.196   minion2   <none>           <none>
+ashupod-123      1/1     Running   0          16m     192.168.179.195   minion2   <none>           <none>
+barispod-123     1/1     Running   0          15m     192.168.50.197    minion3   <none>           <none>
+calinpod-123     1/1     Running   0          67s     192.168.50.205    minion3   <none>           <none>
+ferpod-123       1/1     Running   0          15m     192.168.34.5      minion1   <none>           <none>
+jjpod123         1/1     Running   0          3m44s   192.168.50.204    minion3   <none>           <none>
+karthipod-123    1/
+```
+
+### output of container process 
+
+```
+kubectl logs  ashupod-123
+```
+
+### access 
+
+```
+kubectl exec -it ashupod-123 -- sh 
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # whoami
+root
+/ # exit
+
+```
 
 
