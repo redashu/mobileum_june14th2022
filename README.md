@@ -343,4 +343,62 @@ root
 
 ```
 
+### pod describe 
+
+```
+kubectl describe pod  abhipod-123 
+Name:         abhipod-123
+Namespace:    default
+Priority:     0
+Node:         minion2/172.31.1.108
+Start Time:   Mon, 20 Jun 2022 12:58:04 +0000
+Labels:       <none>
+Annotations:  cni.projectcalico.org/containerID: a186d740b619aea293bb3a889e98a0c6ccf227e4ec03ad07312c54d79d4e914e
+              cni.projectcalico.org/podIP: 192.168.179.196/32
+              cni.projectcalico.org/podIPs: 192.168.179.196/32
+Status:       Running
+IP:           192.168.179.196
+IPs:
+  IP:  192.168.179.196
+Containers:
+  abhic1:
+    Container ID:  containerd://1717c70e7458794fdd7d25aebc0e49979f12b511374a3f136a49f53f984a6725
+    Image:         alpine
+    Image ID:      docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      ping fb.com
+    State:          Running
+      Started:      Mon, 20 Jun 2022 12:58:05 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-bdn2s (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-bdn2s:
+    Type:                    Projected (a volume that co
+```
+
+### deleting pod 
+
+```
+kubectl delete pod kostaspod-1
+pod "kostaspod-1" deleted
+
+[ashu@docker-client k8s-deploy-apps]$ 
+[ashu@docker-client k8s-deploy-apps]$ kubectl delete -f  ashupod1.yaml 
+pod "ashupod-123" deleted
+
+```
+
 
