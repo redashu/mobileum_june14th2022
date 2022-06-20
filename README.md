@@ -80,5 +80,13 @@ NAME                COMMAND             SERVICE             STATUS              
 ashuc11111          "catalina.sh run"   ashuapp6            running             0.0.0.0:1009->8080/tcp, :::1009->8080/tcp
 ```
 
+## Dockerfile - build -test / run / remove  after changes in source code 
+
+### Intro continious Integration  (CI)
+
+<img src="ci.png">
+
+
+
 
 
