@@ -265,6 +265,38 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 <img src="pod.png">
 
 
+### Pod Design 
+
+```
+apiVersion: v1 # version of apiserver to accept pod related request
+kind: Pod # in v1 apiserver we are targeting Pod 
+metadata: # info about target 
+  name: ashupod-123  # name of pod 
+spec: # apps details 
+  containers: 
+  - name: ashuc1 # use can also it 
+    image: alpine # image from docker hub 
+    command: ["sh","-c","ping fb.com"] # process of container 
+```
+
+### send request 
+
+```
+[ashu@docker-client k8s-deploy-apps]$ ls
+ashupod1.yaml
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  pods
+No resources found in default namespace.
+[ashu@docker-client k8s-deploy-apps]$ kubectl  create  -f  ashupod1.yaml 
+pod/ashupod-123 created
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  pods
+NAME          READY   STATUS              RESTARTS   AGE
+ashupod-123   0/1     ContainerCreating   0          3s
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  pods
+NAME          READY   STATUS    RESTARTS   AGE
+ashupod-123   1/1     Running   0          18s
+
+```
+
 
 
 
