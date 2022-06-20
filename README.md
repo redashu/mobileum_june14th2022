@@ -86,6 +86,59 @@ ashuc11111          "catalina.sh run"   ashuapp6            running             
 
 <img src="ci.png">
 
+## build image from gitrepo -- manually 
+
+```
+ docker build  -t  ashuciapp:testv1  https://github.com/redashu/mobi-ashuapp.git 
+Sending build context to Docker daemon   5.12kB
+Step 1/3 : FROM nginx
+latest: Pulling from library/nginx
+42c077c10790: Pull complete 
+62c70f376f6a: Pull complete 
+915cc9bd79c2: Pull complete 
+75a963e94de0: Pull complete 
+7b1fab684d70: Pull complete 
+db24d06d5af4: Pull complete 
+Digest: sha256:2bcabc23b45489fb0885d69a06ba1d648aeda973fae7bb981bafbb884165e514
+Status: Downloaded newer image for nginx:latest
+ ---> 0e901e68141f
+Step 2/3 : LABEL name=ashutoshh
+ ---> Running in 47a4ab5523a0
+Removing intermediate container 47a4ab5523a0
+ ---> f478901e4493
+Step 3/3 : COPY . /usr/share/nginx/html/
+ ---> 6eb89dc167cb
+Successfully built 6eb89dc167cb
+Successfully tagged ashuciapp:testv1
+[ashu@docker-client mobi-dockerimages]$ 
+```
+
+### Jenkins for automated CI 
+
+### Jenkins installation link 
+
+[install](https://www.jenkins.io/doc/book/installing/)
+
+
+
+## problem in containers  wrt Container runtimes 
+
+<img src="prob.png">
+
+### options for solutions 
+
+<img src="sol1.png">
+
+### Introduction to kubernetes -- 
+
+<img src="k8s.png">
+
+### k8s infra setup 
+
+<img src="k8sinfo.png">
+
+
+
 
 
 
