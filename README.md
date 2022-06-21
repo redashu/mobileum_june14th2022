@@ -60,4 +60,8 @@ remote: Resolving deltas: 100% (7/7), done.
 To https://github.com/redashu/mobi-ashuapp.git
    ac3d15f..0d3c7ad  master -> master
 ```
+### CI using jenkins 
+
+<img src="ci.png">
+
 
