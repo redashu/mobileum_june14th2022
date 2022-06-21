@@ -285,4 +285,43 @@ NAME      TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE   SELECTOR
 ashulb1   NodePort   10.99.27.56   <none>        1234:30067/TCP   6s    run=ashucustomer
 ```
 
+### namespace in k8s 
+
+```
+
+[ashu@docker-client ~]$ kubectl  create  namespace   ashu-project  --dry-run=client -o yaml 
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashu-project
+spec: {}
+status: {}
+[ashu@docker-client ~]$ kubectl  create  namespace   ashu-project
+namespace/ashu-project created
+[ashu@docker-client ~]$ kubectl get ns
+NAME                   STATUS   AGE
+ashu-project           Active   3s
+default                Active   34h
+kube-node-lease        Active   34h
+kube-public            Active   34h
+kube-system            Active   34h
+kubernetes-dashboard   Active   34h
+[ashu@docker-client ~]$ kubectl config set-context  --current --namespace ashu-project 
+Context "kubernetes-admin@kubernetes" modified.
+[ashu@docker-client ~]$ kubectl get po
+No resources found in ashu-project namespace.
+[ashu@docker-client ~]$ 
+
+```
+
+### checking current namespace 
+
+```
+kubectl  config get-contexts 
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-project
+```
+
+
 
