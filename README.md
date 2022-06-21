@@ -64,4 +64,90 @@ To https://github.com/redashu/mobi-ashuapp.git
 
 <img src="ci.png">
 
+### coming back to k8s pod 
+
+### create pod from CLi 
+
+```
+kubectl  run  ashupod2 --image=nginx  --port 80 
+pod/ashupod2 created
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  po
+NAME       READY   STATUS    RESTARTS   AGE
+ashupod2   1/1     Running   0          6s
+```
+
+### auto generate YAML/Json file 
+
+```
+kubectl  run  ashupod2 --image=nginx  --port 80 --dry-run=client  -o yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod2
+  name: ashupod2
+spec:
+  containers:
+  - image: nginx
+    name: ashupod2
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+[ashu@docker-client k8s-deploy-apps]$ kubectl  run  ashupod2 --image=nginx  --port 80 --dry-run=client  -o yaml >autopod.yaml
+```
+
+### in JSON format also 
+
+```
+844  kubectl  run  ashupod2 --image=nginx  --port 80 --dry-run=client  -o json 
+  845  kubectl  run  ashupod2 --image=nginx  --port 80 --dry-run=client  -o json >auto.json
+```
+
+### creating pod 
+
+```
+kubectl create -f  autopod.yaml 
+pod/ashupod2 created
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get po
+NAME          READY   STATUS             RESTARTS      AGE
+ashupod2      1/1     Running            0             3s
+```
+
+### lets clean up 
+
+```
+kubectl delete -f  autopod.yaml 
+pod "ashupod2" deleted
+[ashu@docker-client k8s-deploy-apps]$ 
+```
+
+### deploy a docker hub based webapp in k8s as POD 
+
+```
+kubectl run  ashucustomer --image=docker.io/dockerashu/mobiweb:appv1 --port 80 --dry-run=client -o yaml >customerapp.yaml 
+```
+
+### ENV in YAML POD file 
+
+<img src="podenv.png">
+
+### creating pod 
+
+```
+ kubectl create -f customerapp.yaml --dry-run=client 
+pod/ashucustomer created (dry run)
+[ashu@docker-client k8s-deploy-apps]$ kubectl create -f customerapp.yaml 
+pod/ashucustomer created
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  po 
+NAME                READY   STATUS              RESTARTS   AGE
+ashucustomer        0/1     ContainerCreating   0          3s
+prasadpodcustomer   1/1     Running             0  
+```
+
+
+
 
