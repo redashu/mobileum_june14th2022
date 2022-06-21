@@ -336,6 +336,29 @@ NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 ashulb1   NodePort   10.107.245.211   <none>        1234:31941/TCP   6s
 [ashu@docker-client k8s-deploy-apps]$ 
 ```
+### k8s internal components are running as pod 
+
+```
+kubectl  get po -n kube-system 
+NAME                                       READY   STATUS    RESTARTS        AGE
+calico-kube-controllers-56cdb7c587-k6hks   1/1     Running   2 (7h41m ago)   34h
+calico-node-4tgcp                          1/1     Running   2 (7h41m ago)   34h
+calico-node-g6l96                          1/1     Running   2 (7h41m ago)   34h
+calico-node-j82kt                          1/1     Running   2 (7h41m ago)   34h
+calico-node-vcszz                          1/1     Running   2 (7h41m ago)   34h
+coredns-6d4b75cb6d-bvjpn                   1/1     Running   2 (7h41m ago)   34h
+coredns-6d4b75cb6d-rgppl                   1/1     Running   2 (7h41m ago)   34h
+etcd-control-plane                         1/1     Running   2 (7h41m ago)   34h
+kube-apiserver-control-plane               1/1     Running   2 (7h41m ago)   34h
+kube-controller-manager-control-plane      1/1     Running   2 (7h41m ago)   34h
+kube-proxy-9sgj9                           1/1     Running   2 (7h41m ago)   34h
+kube-proxy-dl8g8                           1/1     Running   2 (7h41m ago)   34h
+kube-proxy-ng5vd                           1/1     Running   2 (7h41m ago)   34h
+kube-proxy-rkrcq                           1/1     Running   2 (7h41m ago)   34h
+kube-scheduler-control-plane               1/1     Running   2 (7h41m ago)   34h
+metrics-server-5b46bd8f77-xlcfz            1/1     Running   2 (7h41m ago)   34h
+```
+
 
 
 
