@@ -323,5 +323,19 @@ CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPAC
 *         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-project
 ```
 
+### namespace oriented deploy
+
+```
+kubectl create -f customerapp.yaml  -f nodeport1.yaml pod/ashucustomer created
+service/ashulb1 created
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get po 
+NAME           READY   STATUS    RESTARTS   AGE
+ashucustomer   1/1     Running   0          3s
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  svc
+NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+ashulb1   NodePort   10.107.245.211   <none>        1234:31941/TCP   6s
+[ashu@docker-client k8s-deploy-apps]$ 
+```
+
 
 
