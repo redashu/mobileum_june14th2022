@@ -27,3 +27,37 @@
 ### info about apache httpd 
 
 <img src="httpd.png">
+
+### pushing project to git repo 
+
+```
+812  git  add  .
+  813  git commit -m "ashu customer app v1 "
+  814  git config --global user.email "ashutoshh@linux.com"
+  815  git config --global user.name  redashu
+  816  git commit -m "ashu customer app v1 "
+  817  history 
+[ashu@docker-client mobi-ashuapp]$ git status 
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+[ashu@docker-client mobi-ashuapp]$ 
+```
+
+### pushing it 
+
+```
+git push 
+Enumerating objects: 136, done.
+Counting objects: 100% (136/136), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (131/131), done.
+Writing objects: 100% (135/135), 2.64 MiB | 7.40 MiB/s, done.
+Total 135 (delta 7), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (7/7), done.
+To https://github.com/redashu/mobi-ashuapp.git
+   ac3d15f..0d3c7ad  master -> master
+```
+
