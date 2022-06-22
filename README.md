@@ -402,6 +402,10 @@ ashulb111   NodePort   10.97.107.23   <none>        1244:30391/TCP   10s   app=a
 
 ```
 
+### sharing Minions IP's is not safe even not relevent 
+
+<img src="extlb.png">
+
 
 
 
