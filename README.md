@@ -266,3 +266,24 @@ ashuapplb1   NodePort   10.99.4.199   <none>        1234:30069/TCP   19s   run=a
 [ashu@docker-client k8s-deploy-apps]$ 
 
 ```
+
+### lets not deploy container image in POd 
+
+```
+<<X  Problem with Pods 
+> 
+> 1. they can't move minion1 - minion2 
+> 2. self healing 
+> 3. scaling horizental 
+
+```
+
+### Controllers in k8s 
+
+<img src="cont.png">
+
+### Deployment in k8s 
+
+<img src="dep.png">
+
+
