@@ -188,4 +188,81 @@ NAME            READY   STATUS              RESTARTS   AGE
 ashusecureapp   0/1     ContainerCreating   0          25s
 [ashu@docker-client k8s-deploy-apps]$ 
 ```
+### merging yaml 
 
+```
+# lets write secret yaml first 
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJhc2h1bW9iaS5henVyZWNyLmlvIjp7InVzZXJuYW1lIjoiYXNodW1vYmkiLCJwYXNzd29yZCI6IkdHYi9hdko1QW14ejRPd0IwSzFFb1M4WThEbmRDRzZvIiwiYXV0aCI6IllYTm9kVzF2WW1rNlIwZGlMMkYyU2pWQmJYaDZORTkzUWpCTE1VVnZVemhaT0VSdVpFTkhObTg9In19fQ==
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: ashuappsec1
+type: kubernetes.io/dockerconfigjson
+
+# lets write pod yaml 
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels: # label of pods 
+    run: ashusecureapp
+  name: ashusecureapp
+spec:
+  imagePullSecrets: # to call secret in pod 
+  - name: ashuappsec1 # name of secret 
+  containers:
+  - image: ashumobi.azurecr.io/ashuwebapp:mobiv1
+    name: ashusecureapp
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+# lets create service nOdePort 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashuapplb1
+  name: ashuapplb1
+spec:
+  ports:
+  - name: 1234-80
+    port: 1234
+    protocol: TCP
+    targetPort: 80
+  selector: # we need to write labels of pod 
+    run: ashusecureapp 
+  type: NodePort
+status:
+  loadBalancer: {}
+
+```
+
+
+### deploy it in another way 
+
+```
+kubectl create -f  ashuazureapp.yaml 
+secret/ashuappsec1 created
+pod/ashusecureapp created
+service/ashuapplb1 created
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get secret 
+NAME          TYPE                             DATA   AGE
+ashuappsec1   kubernetes.io/dockerconfigjson   1      4s
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get po --show-labels 
+NAME            READY   STATUS    RESTARTS   AGE   LABELS
+ashusecureapp   1/1     Running   0          12s   run=ashusecureapp
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  svc -o wide 
+NAME         TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE   SELECTOR
+ashuapplb1   NodePort   10.99.4.199   <none>        1234:30069/TCP   19s   run=ashusecureapp
+[ashu@docker-client k8s-deploy-apps]$ 
+
+```
