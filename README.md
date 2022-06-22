@@ -59,3 +59,133 @@ NAME      TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE   SELECT
 ashulb2   NodePort   10.106.214.42   <none>        1234:31141/TCP   7s    x1=helloashu
 [ashu@docker-client k8s-deploy-apps]$ 
 ```
+
+### deploy images in k8s from private Image registry 
+
+<img src="private.png">
+
+### pushing image to azure registry 
+
+```
+ docker  tag  34a1284ffa7d   ashumobi.azurecr.io/ashuwebapp:mobiv1 
+[ashu@docker-client ~]$ docker login  ashumobi.azurecr.io
+Username: ashumobi
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ashu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[ashu@docker-client ~]$ docker  push  ashumobi.azurecr.io/ashuwebapp:mobiv1
+The push refers to repository [ashumobi.azurecr.io/ashuwebapp]
+12a632c0d0fc: Pushed 
+5c97fe79528e: Pushed 
+a2c0a58ca198: Pushed 
+aa82b2380804: Pushed 
+3b4f4d6ea52e: Pushed 
+2d97fb64a09c: Pushed 
+2d3586eacb61: Pushed 
+mobiv1: digest: sha256:6cd090cc218a170f5a9039756afe0b21c5f7040fe85167d72b3890c476f00191 size: 1787
+[ashu@docker-client ~]$ docker logout  ashumobi.azurecr.io
+Removing login credentials for ashumobi.azurecr.io
+[ashu@docker-client ~]$ 
+
+```
+
+### lets deploy pod in k8s 
+
+```
+kubectl run  ashusecureapp --image=ashumobi.azurecr.io/ashuwebapp:mobiv1  --port 80         --dry-run=client -o yaml  >azureimage.yaml 
+[ashu@docker-client k8s-deploy-apps]$ kubectl create -f  azureimage.yaml 
+pod/ashusecureapp created
+[ashu@docker-client k8s-deploy-apps]$ kubectl   get  po
+NAME            READY   STATUS         RESTARTS   AGE
+ashusecureapp   0/1     ErrImagePull   0          4s
+[ashu@docker-client k8s-deploy-apps]$ 
+```
+
+### intro to secret resource in k8s for confidential storage 
+
+<img src="secret.png">
+
+### type of secret 
+
+```
+kubectl  create   secret  
+Create a secret using specified subcommand.
+
+Available Commands:
+  docker-registry   Create a secret for use with a Docker registry
+  generic           Create a secret from a local file, directory, or literal value
+  tls               Create a TLS secret
+
+Usage:
+```
+### creating docker-registry type of secret to store any registry creds 
+
+```
+kubectl  create   secret  docker-registry ashuappsec1  --docker-server=ashumobi.azurecr.io  --docker-username="ashumobi"  --docker-password="GGb/avJ6o"  --dry-run=client -o yaml 
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJhc2h1bW9iaS5henVyZWNyLmlvIjp7InVzZXJuYW1lIjoiYXNodW1vYmkiLCJwYXNzd29yZCI6IkdHYi9hdko1QW14ejRPd0IwSzFFb1M4WThEbmRDRzZvIiwiYXV0aCI6IllY
+```
+
+### yAML file for secret 
+
+```
+kubectl  create   secret  docker-registry ashuappsec1  --docker-server=ashumobi.azurecr.io  --docker-username="ashumobi"  --docker-password="GGb/avJ5Amxz4OwB0K1EoS8Y8DndCG6o"  --dry-run=client -o yaml  >secret1.yaml 
+```
+
+### 
+
+```
+kubectl create  -f  secret1.yaml 
+secret/ashuappsec1 created
+[ashu@docker-client k8s-deploy-apps]$ kubectl get  secret 
+NAME          TYPE                             DATA   AGE
+ashuappsec1   kubernetes.io/dockerconfigjson   1      5s
+[ashu@docker-client k8s-deploy-apps]$ 
+```
+
+### lets use this secret in Pod 
+
+### YAML 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashusecureapp
+  name: ashusecureapp
+spec:
+  imagePullSecrets: # to call secret in pod 
+  - name: ashuappsec1 # name of secret 
+  containers:
+  - image: ashumobi.azurecr.io/ashuwebapp:mobiv1
+    name: ashusecureapp
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+```
+
+## Deploy it 
+
+```
+kubectl replace  -f  azureimage.yaml --force 
+pod "ashusecureapp" deleted
+pod/ashusecureapp replaced
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  po 
+NAME            READY   STATUS              RESTARTS   AGE
+ashusecureapp   0/1     ContainerCreating   0          12s
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  po 
+NAME            READY   STATUS              RESTARTS   AGE
+ashusecureapp   0/1     ContainerCreating   0          25s
+[ashu@docker-client k8s-deploy-apps]$ 
+```
+
