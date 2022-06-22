@@ -286,4 +286,122 @@ ashuapplb1   NodePort   10.99.4.199   <none>        1234:30069/TCP   19s   run=a
 
 <img src="dep.png">
 
+### more details about deployment 
+
+<img src="dep1.png">
+
+### list of all api-resources in k8s 
+
+```
+ kubectl api-resources  
+NAME                              SHORTNAMES   APIVERSION                             NAMESPACED   KIND
+bindings                                       v1                                     true         Binding
+componentstatuses                 cs           v1                                     false        ComponentStatus
+configmaps                        cm           v1                                     true         ConfigMap
+endpoints                         ep           v1                                     true         Endpoints
+events                            ev           v1                                     true         Event
+limitranges                       limits       v1                                     true         LimitRange
+namespaces                        ns           v1                                     false        Namespace
+nodes                             no           v1                                     false        Node
+
+```
+
+### creating deployment YAML 
+
+```
+ kubectl create  deployment  ashudep1 --image=dockerashu/mobiweb:appv1   --port 80 --dry-run=client -o yaml >deploy1.yaml 
+```
+
+### importance of template in deployment to create PODs
+
+<img src="temp.png">
+
+### yaml deploy 
+
+```
+ kubectl create  -f  deploy1.yaml 
+deployment.apps/ashudep1 created
+[ashu@docker-client k8s-deploy-apps]$ kubectl get deployments
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   1/1     1            1           27s
+[ashu@docker-client k8s-deploy-apps]$ kubectl get deploy
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   1/1     1            1           30s
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get rs 
+NAME                 DESIRED   CURRENT   READY   AGE
+ashudep1-7cf7b5844   1         1         1       36s
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  po
+NAME                       READY   STATUS    RESTARTS   AGE
+ashudep1-7cf7b5844-qq2cl   1/1     Running   0          45s
+[ashu@docker-client k8s-deploy-apps]$ 
+```
+
+### self healing for pods 
+
+```
+ kubectl get po -o wide
+NAME                       READY   STATUS    RESTARTS   AGE     IP               NODE      NOMINATED NODE   READINESS GATES
+ashudep1-7cf7b5844-qq2cl   1/1     Running   0          2m33s   192.168.50.214   minion3   <none>           <none>
+[ashu@docker-client k8s-deploy-apps]$ kubectl delete pod ashudep1-7cf7b5844-qq2cl
+pod "ashudep1-7cf7b5844-qq2cl" deleted
+[ashu@docker-client k8s-deploy-apps]$ kubectl get po -o wide
+NAME                       READY   STATUS    RESTARTS   AGE   IP              NODE      NOMINATED NODE   READINESS GATES
+ashudep1-7cf7b5844-gwf8w   1/1     Running   0          34s   192.168.34.58   minion1   <none>           <none>
+[ashu@docker-client k8s-deploy-apps]$ 
+
+```
+
+### scaling of pods 
+
+<img src="scale.png">
+
+### manualy scaling using YAML change 
+
+```
+kubectl  apply  -f  deploy1.yaml 
+Warning: resource deployments/ashudep1 is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. The missing annotation will be patched automatically.
+deployment.apps/ashudep1 configured
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  deploy 
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   2/2     2            2           11m
+```
+
+### without YAML replica 
+
+```
+ kubectl  scale deploy ashudep1  --replicas=2
+deployment.apps/ashudep1 scaled
+[ashu@docker-client k8s-deploy-apps]$ 
+[ashu@docker-client k8s-deploy-apps]$ 
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  deploy 
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   2/2     2            2           107s
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  po
+NAME                       READY   STATUS        RESTARTS   AGE
+ashudep1-7cf7b5844-5xkkd   1/1     Running       0          111s
+ashudep1-7cf7b5844-bnzvw   1/1     Terminating   0          82s
+ashudep1-7cf7b5844-hbvj4   1/1     Running       0          111s
+ashudep1-7cf7b5844-r6dkk   1/1     Terminating   0          111s
+```
+
+### deployment to create service 
+
+```
+kubectl  get deploy 
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   2/2     2            2           5m13s
+[ashu@docker-client k8s-deploy-apps]$ kubectl  expose  deployment  ashudep1  --type NodePort --port 1244 --target-port 80  --name ashulb111  
+service/ashulb111 exposed
+[ashu@docker-client k8s-deploy-apps]$ kubectl   get  service 
+NAME        TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+ashulb111   NodePort   10.97.107.23   <none>        1244:30391/TCP   5s
+[ashu@docker-client k8s-deploy-apps]$ kubectl   get  svc -o wide 
+NAME        TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE   SELECTOR
+ashulb111   NodePort   10.97.107.23   <none>        1244:30391/TCP   10s   app=ashudep1
+[ashu@docker-client k8s-deploy-apps]$ 
+
+```
+
+
+
 
