@@ -406,6 +406,118 @@ ashulb111   NodePort   10.97.107.23   <none>        1244:30391/TCP   10s   app=a
 
 <img src="extlb.png">
 
+### LB vs NP service 
+
+<img src="lbsvc.png">
+
+```
+kubectl get deploy 
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   2/2     2            2           142m
+[ashu@docker-client k8s-deploy-apps]$ kubectl get svc
+NAME        TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+ashulb111   NodePort   10.97.107.23   <none>        1244:30391/TCP   136m
+[ashu@docker-client k8s-deploy-apps]$ kubectl  expose deploy ashudep1  --type LoadBalancer  --port 1234 --target-port 80 --name lbsvc1 
+service/lbsvc1 exposed
+[ashu@docker-client k8s-deploy-apps]$ kubectl get svc
+NAME        TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+ashulb111   NodePort       10.97.107.23     <none>        1244:30391/TCP   137m
+lbsvc1      LoadBalancer   10.109.125.253   <pending>     1234:30521/TCP   2s
+[ashu@docker-client k8s-deploy-apps]$ 
+
+
+```
+
+### splunk task solution yaml 
+
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashusplunkns
+spec: {}
+status: {}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusplunk
+  name: ashusplunk
+  namespace: ashusplunkns  # adding namespace in deploy metadata 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashusplunk
+  strategy: {}
+  template: # for pod purpose 
+    metadata:
+      creationTimestamp: null
+      labels: # label of pods
+        app: ashusplunk
+    spec:
+      containers:
+      - image: splunk/splunk:latest
+        name: splunk
+        ports:
+        - containerPort: 8000
+        env:
+        - name: SPLUNK_START_ARGS
+          value: "--accept-license"
+        - name: SPLUNK_PASSWORD
+          valueFrom: # calling values 
+            secretKeyRef: # from secret 
+              name: splunk-sec
+              key: key111 
+        resources: {}
+status: {}
+---
+apiVersion: v1
+data:
+  key111: RG9ja2VyQDk5MDAjMzM=
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: splunk-sec
+  namespace: ashusplunkns
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: splunklb
+  name: splunklb
+  namespace: ashusplunkns
+spec:
+  ports:
+  - name: 1234-8000
+    port: 1234
+    protocol: TCP
+    targetPort: 8000
+  selector: # need port of pods 
+    app: ashusplunk
+  type: NodePort
+status:
+  loadBalancer: {}
+
+
+```
+
+### deploy it 
+
+```
+kubectl apply -f  ashusplunk.yaml 
+ 1003  kubectl get  deploy -n  ashusplunkns
+ 1004  kubectl get  secret  -n  ashusplunkns
+ 1005  kubectl get  po  -n  ashusplunkns
+ 1006  kubectl get  svc  -n  ashusplunkns
+```
 
 
 
