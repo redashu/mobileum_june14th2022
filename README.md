@@ -256,7 +256,90 @@ namespace:  20 bytes
 token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IlJrRTFsSnY2aHJmUE53VlVHLVgxYXZqSVp2SldpcUJxaFJqenlMVTMyNUkifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9u
 ```
 
+## storage in k8s 
 
+<img src="st.png">
+
+### storage sources for k8s 
+
+<img src="st1.png">
+
+### volume type list 
+
+[docs](https://kubernetes.io/docs/concepts/storage/volumes/)
+
+
+### demo of hostPath volume 
+
+### creating pod 
+
+```
+kubectl  run  ashupodnew --image=alpine --dry-run=client   -o yaml  >volume1.yaml 
+```
+
+### volume data show 
+
+<img src="vol.png">
+
+### FInal YAML 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupodnew
+  name: ashupodnew
+spec:
+  volumes: # to create volumes 
+  - name: ashuvol1
+    hostPath: # it will take storage from minion Node 
+      path: /data/ashuvol1 # this location will on minion Node 
+      type: DirectoryOrCreate # if not present then create it 
+  containers: # to create containers 
+  - image: alpine
+    name: ashupodnew
+    command: ["sh","-c","while true; do date >>/mnt/data/time.txt ; sleep 15; done"]
+    resources: {}
+    volumeMounts: # to mount volume created above
+    - name: ashuvol1
+      mountPath: /mnt/data/ # this place will be created 
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+```
+
+### deploy it 
+
+```
+kubectl apply -f  volume1.yaml 
+pod/ashupodnew created
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  po 
+NAME         READY   STATUS    RESTARTS   AGE
+ashupodnew   1/1     Running   0          5s
+[ashu@docker-client k8s-deploy-apps]$ 
+
+```
+
+## lets check it 
+
+```
+ kubectl  exec -it  ashupodnew -- sh 
+/ # cd /mnt/data/
+/mnt/data # ls
+time.txt
+/mnt/data # cat  time.txt 
+Thu Jun 23 11:31:17 UTC 2022
+Thu Jun 23 11:31:32 UTC 2022
+Thu Jun 23 11:31:47 UTC 2022
+Thu Jun 23 11:32:02 UTC 2022
+Thu Jun 23 11:32:17 UTC 2022
+/mnt/data # exit
+
+```
 
 
 
