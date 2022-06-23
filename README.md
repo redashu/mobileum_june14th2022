@@ -547,6 +547,31 @@ kube-root-ca.crt   1      47h
 pg-config          2      13m
 ```
 
+### Users and RBAC in k8s 
+
+<img src="urbac.png">
+
+### normal users and service account in k8s 
+
+<img src="sa.png">
+
+## restricted access for any user 
+
+### creating a NS 
+
+```
+ kubectl create ns  common-access 
+namespace/common-access created
+[ashu@docker-client dbs]$ kubectl  get  sa  -n common-access 
+NAME      SECRETS   AGE
+default   0         5s
+[ashu@docker-client dbs]$ 
+```
+
+### creating custom kubeconfig file for above namespace 
+
+<img src="custom.png">
+
 
 
 
