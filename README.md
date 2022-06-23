@@ -391,6 +391,91 @@ ashupodnew   2/2     Running   0          7s
 [ashu@docker-client k8s-deploy-apps]$ 
 ```
 
+###  how to access contianes inside pod 
+
+```
+kubectl  get po 
+NAME         READY   STATUS    RESTARTS   AGE
+ashupodnew   2/2     Running   0          5m28s
+[ashu@docker-client k8s-deploy-apps]$ kubectl  exec -it ashupodnew  -- bash 
+Defaulted container "ashuc1" out of: ashuc1, ashupodnew
+root@ashupodnew:/# 
+root@ashupodnew:/# 
+root@ashupodnew:/# 
+root@ashupodnew:/# 
+root@ashupodnew:/# cd /usr/share/nginx/html/
+root@ashupodnew:/usr/share/nginx/html# ls 
+time.txt
+root@ashupodnew:/usr/share/nginx/html# rm time.txt 
+rm: cannot remove 'time.txt': Read-only file system
+root@ashupodnew:/usr/share/nginx/html# exit
+exit
+command terminated with exit code 1
+[ashu@docker-client k8s-deploy-apps]$ kubectl  exec -it ashupodnew  -c   ashupodnew   -- sh 
+/ # cd /mnt/data/
+/mnt/data # ls
+time.txt
+/mnt/data # exit
+```
+
+### postgresql in k8s 
+
+<img src="postgre.png">
+
+### deployment YAML 
+
+```
+mkdir dbs 
+[ashu@docker-client k8s-deploy-apps]$ cd  dbs/
+[ashu@docker-client dbs]$ kubectl  create  deployment  postgre --image=postgres --port 5432    --dry-run=client -o yaml >postgre_deploy.yaml
+```
+
+### secret and configMAP for Db details 
+
+<img src="details.png">
+
+### secret to store password in encoded format 
+
+```
+kubectl  create  secret generic  postgre-pass  --from-literal            pgpass="123456#Docker"  --dry-run=client -o yaml >pgsec.yaml
+[ashu@docker-client dbs]$ 
+[ashu@docker-client dbs]$ kubectl apply -f pgsec.yaml 
+secret/postgre-pass created
+[ashu@docker-client dbs]$ kubectl  get secret 
+NAME           TYPE     DATA   AGE
+postgre-pass   Opaque   1      5s
+```
+
+### creating configMAP for other details 
+
+### Note: if we are using env then this given method will work 
+
+```
+kubectl  create  configmap pg-config  --from-literal pg-user="admin"  --from-literal pg-db="testdb123" --dry-run=client -o yaml  >pg_cm.yaml 
+[ashu@docker-client dbs]$ kubectl apply -f pg_cm.yaml 
+configmap/pg-config created
+[ashu@docker-client dbs]$ kubectl  get  cm 
+NAME               DATA   AGE
+kube-root-ca.crt   1      47h
+pg-config          2      4s
+```
+
+
+### Note : if we are using envFrom then below configmap file will help 
+
+```
+apiVersion: v1
+data:
+  POSTGRES_DB: testdb123
+  POSTGRES_USER: admin
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: pg-config
+
+```
+
+### 
 
 
 
