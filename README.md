@@ -344,7 +344,52 @@ Thu Jun 23 11:32:17 UTC 2022
 
 <img src="sidecar.png">
 
+### demo 
 
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupodnew
+  name: ashupodnew
+spec:
+  volumes: # to create volumes 
+  - name: ashuvol1
+    hostPath: # it will take storage from minion Node 
+      path: /data/ashuvol1 # this location will on minion Node 
+      type: DirectoryOrCreate # if not present then create it 
+  containers: # to create containers 
+  - image: nginx 
+    name: ashuc1 
+    volumeMounts:
+    - name: ashuvol1 
+      mountPath: /usr/share/nginx/html/
+      readOnly: true 
+  - image: alpine
+    name: ashupodnew
+    command: ["sh","-c","while true; do date >>/mnt/data/time.txt ; sleep 15; done"]
+    resources: {}
+    volumeMounts: # to mount volume created above
+    - name: ashuvol1
+      mountPath: /mnt/data/ # this place will be created 
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+```
+
+### deploy it 
+
+```
+kubectl  apply -f volume1.yaml 
+pod/ashupodnew created
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get po 
+NAME         READY   STATUS    RESTARTS   AGE
+ashupodnew   2/2     Running   0          7s
+[ashu@docker-client k8s-deploy-apps]$ 
+```
 
 
 
