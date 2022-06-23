@@ -73,6 +73,79 @@ minikube   Ready    control-plane   64s   v1.24.1
 
 
 ```
+### Understanding auto scaling in k8s for apps 
+
+### creating a deployment 
+
+```
+ kubectl create deployment  dogapp --image=dockerashu/dog:v1  --port 80 
+ kubectl  get  deploy 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+dogapp   1/1     1            1           6s
+```
+
+### creating nodeport service 
+
+```
+ kubectl  expose deployment  dogapp  --type NodePort  --port 80 --name doglb1 
+service/doglb1 exposed
+[ashu@docker-client mobi-dockerimages]$ kubectl  get  svc 
+NAME     TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+doglb1   NodePort   10.104.97.118   <none>        80:30473/TCP   5s
+[ashu@docker-client mobi-dockerimages]$ 
+```
+
+### FOR horizental scaling we need HPA support 
+
+<img src="hpa.png">
+
+### resource restriction for pod container 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: dogapp
+  name: dogapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dogapp
+  strategy: {}
+  template: # info about pod 
+    metadata:
+      creationTimestamp: null
+      labels: # label of pod 
+        app: dogapp
+    spec:
+      containers:
+      - image: dockerashu/dog:v1
+        name: dog
+        ports:
+        - containerPort: 80
+        resources: 
+          requests: # resource info 
+            cpu: 100m # 1 vcpu/ 1 core  == 1000 milicore 
+            memory: 100M 
+          limits:
+            memory: 300M 
+            cpu: 200m 
+
+status: {}
+
+```
+
+### 
+
+```
+kubectl  apply -f  dogdeploy.yaml 
+ 1001  kubectl get po 
+```
+
+
 
 
 
