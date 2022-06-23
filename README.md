@@ -145,6 +145,37 @@ kubectl  apply -f  dogdeploy.yaml
  1001  kubectl get po 
 ```
 
+### HPA 
+
+```
+kubectl get deploy 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+dogapp   1/1     1            1           57m
+[ashu@docker-client k8s-deploy-apps]$ kubectl get  hpa 
+No resources found in ashu-project namespace.
+[ashu@docker-client k8s-deploy-apps]$ kubectl autoscale deployment  dogapp  --min=3 --max=15 --cpu-percent=10 
+horizontalpodautoscaler.autoscaling/dogapp autoscaled
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get  hpa
+NAME     REFERENCE           TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+dogapp   Deployment/dogapp   <unknown>/10%   3         15        0          4s
+[ashu@docker-client k8s-deploy-apps]$ 
+
+```
+
+### check for minimum 
+
+```
+ kubectl get deploy 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+dogapp   3/3     3            3           60m
+[ashu@docker-client k8s-deploy-apps]$ kubectl get po 
+NAME                      READY   STATUS    RESTARTS   AGE
+dogapp-79b6b89d95-96p8g   1/1     Running   0          38m
+dogapp-79b6b89d95-htwt7   1/1     Running   0          79s
+dogapp-79b6b89d95-rqm66   1/1     Running   0          79s
+```
+
+
 
 
 
