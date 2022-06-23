@@ -175,6 +175,88 @@ dogapp-79b6b89d95-htwt7   1/1     Running   0          79s
 dogapp-79b6b89d95-rqm66   1/1     Running   0          79s
 ```
 
+### dashboard in k8s 
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+namespace/kubernetes-dashboard created
+serviceaccount/kubernetes-dashboard created
+service/kubernetes-dashboard created
+secret/kubernetes-dashboard-certs created
+secret/kubernetes-dashboard-csrf created
+secret/kubernetes-dashboard-key-holder created
+configmap/kubernetes-dashboard-settings created
+role.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard unchanged
+rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard unchanged
+deployment.apps/kubernetes-dashboard created
+service/dashboard-metrics-scraper created
+```
+
+### change service type 
+
+```
+ kubectl  get svc -n kubernetes-dashboard
+NAME                        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+dashboard-metrics-scraper   ClusterIP   10.111.119.40   <none>        8000/TCP   68s
+kubernetes-dashboard        ClusterIP   10.97.77.77     <none>        443/TCP    68s
+[ashu@docker-client k8s-deploy-apps]$ kubectl edit  svc   kubernetes-dashboard    -n kubernetes-dashboard
+service/kubernetes-dashboard edited
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get svc -n kubernetes-dashboard
+NAME                        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)         AGE
+dashboard-metrics-scraper   ClusterIP   10.111.119.40   <none>        8000/TCP        2m52s
+kubernetes-dashboard        NodePort    10.97.77.77     <none>        443:32078/TCP   2m52s
+[ashu@docker-client k8s-deploy-apps]$ 
+```
+
+### from 1.24 onward there will be no secret created automatically for service account 
+
+### creating secret 
+
+```
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: dash-secret
+  annotations:
+    kubernetes.io/service-account.name: "kubernetes-dashboard"
+  namespace: kubernetes-dashboard
+```
+
+### apply 
+
+```
+ kubectl apply -f dashboard-secret.yaml 
+secret/dash-secret created
+[ashu@docker-client k8s-deploy-apps]$ kubectl  get secret -n kubernetes-dashboard
+NAME                              TYPE                                  DATA   AGE
+dash-secret                       kubernetes.io/service-account-token   3      4s
+kubernetes-dashboard-certs        Opaque                                0      12m
+kubernetes-dashboard-csrf         Opaque                                1      12m
+kubernetes-dashboard-key-holder   Opaque         
+```
+
+### to get the token of service account 
+
+```
+kubectl  describe  secret  dash-secret   -n kubernetes-dashboard
+Name:         dash-secret
+Namespace:    kubernetes-dashboard
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: kubernetes-dashboard
+              kubernetes.io/service-account.uid: 4c984e5b-6ca9-4e99-a870-fc81915b02ac
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+namespace:  20 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IlJrRTFsSnY2aHJmUE53VlVHLVgxYXZqSVp2SldpcUJxaFJqenlMVTMyNUkifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9u
+```
+
+
 
 
 
