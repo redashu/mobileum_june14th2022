@@ -475,7 +475,79 @@ metadata:
 
 ```
 
-### 
+### final postgres Db yaml 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: postgre
+  name: postgre
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgre
+  strategy: {}
+  template: # template for pods creation 
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: postgre
+    spec:
+      volumes: # creating volume using host Path 
+      - name: ashudbvol1
+        hostPath:
+          path: /data/ashupgdb
+          type: DirectoryOrCreate 
+      containers:
+      - image: postgres
+        name: postgres
+        ports:
+        - containerPort: 5432
+        envFrom: # standard docker image will take values 
+        - configMapRef:
+            name: pg-config # name of confimap 
+        env: 
+        - name: POSTGRES_PASSWORD
+          valueFrom: # taking value from somewhere 
+            secretKeyRef: # from secret 
+              name: postgre-pass # name of secret
+              key: pgpass # key fo secret 
+        volumeMounts: # mounting it 
+        - name: ashudbvol1
+          mountPath: /var/lib/postgresql/data # default location 
+        resources: {}
+status: {}
+
+```
+
+### final view 
+
+```
+ apply -f postgre_deploy1.yaml  
+deployment.apps/postgre created
+[ashu@docker-client dbs]$ kubectl  get  deploy
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+postgre   1/1     1            1           9s
+[ashu@docker-client dbs]$ kubectl  get  rs
+NAME                 DESIRED   CURRENT   READY   AGE
+postgre-8444f49778   1         1         1       12s
+[ashu@docker-client dbs]$ kubectl  get  po
+NAME                       READY   STATUS    RESTARTS   AGE
+postgre-8444f49778-rxt5w   1/1     Running   0          15s
+[ashu@docker-client dbs]$ kubectl  get  secret
+NAME           TYPE     DATA   AGE
+postgre-pass   Opaque   1      29m
+[ashu@docker-client dbs]$ kubectl  get  cm
+NAME               DATA   AGE
+kube-root-ca.crt   1      47h
+pg-config          2      13m
+```
+
+
 
 
 
