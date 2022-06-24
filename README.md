@@ -162,5 +162,88 @@ ashu-ingress-rule   nginx   www.ashumobi.com   172.31.11.164   80      38s
 
 ```
 
+### few problem in CD process if we consider jenkins 
+
+<img src="jprob.png">
+
+### deploy argocd in k8s 
+
+```
+kubectl create namespace argocd
+namespace/argocd created
+[ashu@docker-client ingress-demo]$ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+customresourcedefinition.apiextensions.k8s.io/applications.argoproj.io created
+customresourcedefinition.apiextensions.k8s.io/applicationsets.argoproj.io created
+customresourcedefinition.apiextensions.k8s.io/appprojects.argoproj.io created
+serviceaccount/argocd-application-controller created
+serviceaccount/argocd-applicationset-controller created
+serviceaccount/argocd-dex-server created
+serviceaccount/argocd-notifications-controller cr
+```
+
+### change service to Nodeport if you dont' have ingress rules 
+
+```
+kubectl get deploy -n argocd 
+NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
+argocd-applicationset-controller   1/1     1            1           73s
+argocd-dex-server                  1/1     1            1           73s
+argocd-notifications-controller    1/1     1            1           73s
+argocd-redis                       1/1     1            1           73s
+argocd-repo-server                 1/1     1            1           72s
+argocd-server                      1/1     1            1           72s
+[ashu@docker-client ingress-demo]$ kubectl get svc  -n argocd 
+NAME                                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+argocd-applicationset-controller          ClusterIP   10.101.2.253     <none>        7000/TCP,8080/TCP            3m26s
+argocd-dex-server                         ClusterIP   10.105.104.15    <none>        5556/TCP,5557/TCP,5558/TCP   3m26s
+argocd-metrics                            ClusterIP   10.100.164.156   <none>        8082/TCP                     3m26s
+argocd-notifications-controller-metrics   ClusterIP   10.100.63.251    <none>        9001/TCP                     3m26s
+argocd-redis                              ClusterIP   10.102.143.131   <none>        6379/TCP                     3m26s
+argocd-repo-server                        ClusterIP   10.106.88.201    <none>        8081/TCP,8084/TCP            3m26s
+argocd-server                             ClusterIP   10.108.8.126     <none>        80/TCP,443/TCP               3m26s
+argocd-server-metrics                     ClusterIP   10.99.161.50     <none>        8083/TCP                     3m26s
+[ashu@docker-client ingress-demo]$ kubectl edit svc argocd-server  -n argocd 
+service/argocd-server edited
+[ashu@docker-client ingress-demo]$ kubectl get svc  -n argocd 
+NAME                                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+argocd-applicationset-controller          ClusterIP   10.101.2.253     <none>        7000/TCP,8080/TCP            4m27s
+argocd-dex-server                         ClusterIP   10.105.104.15    <none>        5556/TCP,5557/TCP,5558/TCP   4m27s
+argocd-metrics                            ClusterIP   10.100.164.156   <none>        8082/TCP                     4m27s
+argocd-notifications-controller-metrics   ClusterIP   10.100.63.251    <none>        9001/TCP                     4m27s
+argocd-redis                              ClusterIP   10.102.143.131   <none>        6379/TCP                     4m27s
+argocd-repo-server                        ClusterIP   10.106.88.201    <none>        8081/TCP,8084/TCP            4m27s
+argocd-server                             NodePort    10.108.8.126     <none>        80:32523/TCP,443:32598/TCP   4m27s
+argocd-server-metrics                     ClusterIP   10.99.161.50     <none>        8083/TCP                     4m27s
+[ashu@docker-client ingress-demo]$ 
+```
+
+### to get password  for default admin user 
+
+```
+ kubectl get secret -n argocd 
+NAME                          TYPE     DATA   AGE
+argocd-initial-admin-secret   Opaque   1      3m9s
+argocd-notifications-secret   Opaque   0      3m16s
+argocd-secret                 Opaque   5      3m16s
+```
+
+###
+
+```
+kubectl get secret  argocd-initial-admin-secret   -n argocd -o yaml 
+apiVersion: v1
+data:
+  password: c25FdGdNR1RFSzk2dHpoag==
+kind: Secret
+metadata:
+
+```
+
+### 
+
+```
+echo c25FdGdNR1RFSzk2dHpoag==  |  base64 -d
+snEtgMGTEK96tzhj
+```
 
 
