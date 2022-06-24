@@ -46,6 +46,32 @@ ingress-nginx-controller-admission   ClusterIP   10.108.180.148   <none>        
 [ashu@docker-client mobi-dockerimages]$ 
 ```
 
+### changes in container 
+
+```
+docker  exec -it  ashuc1 bash 
+root@c4b20f5bf5f4:/# 
+root@c4b20f5bf5f4:/# 
+root@c4b20f5bf5f4:/# cd /usr/share/nginx/html/
+root@c4b20f5bf5f4:/usr/share/nginx/html# apt udpate ; apt install vim -y ^C
+root@c4b20f5bf5f4:/usr/share/nginx/html# ls
+50x.html  dog.jpg  index.html
+root@c4b20f5bf5f4:/usr/share/nginx/html# cat  index.html 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ashu</title>
+</head>
+<body>
+    <h1> i am ashu and i love dogs  </h1>
+    <img src="dog.jpg" alt="not loading ">
+    
+</body>
+</html>
+```
 
 ### changing a running container into docker image 
 
