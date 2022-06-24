@@ -92,3 +92,75 @@ The push refers to repository [docker.io/dockerashu/ashuapp]
 31905c988dca: Mounted from dockerashu/dog 
 431a31bd0b21: Mounted from dockerashu/dog 
 ```
+
+### application deploy with nginx 
+
+### create deployment 
+
+```
+ mkdir ingress-demo 
+[ashu@docker-client k8s-deploy-apps]$ cd ingress-demo/
+[ashu@docker-client ingress-demo]$ 
+[ashu@docker-client ingress-demo]$ kubectl create deployment ashuapp --image=dockerashu/ashuapp:dogv1    --port 80  
+deployment.apps/ashuapp created
+[ashu@docker-client ingress-demo]$ kubectl get deploy 
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+ashuapp   1/1     1            1           20s
+[ashu@docker-client ingress-demo]$ 
+
+```
+
+### creating service 
+
+```
+kubectl get deploy 
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+ashuapp   1/1     1            1           2m50s
+[ashu@docker-client ingress-demo]$ kubectl expose deploy ashuapp --type ClusterIP --port 80 --name  ashulb1 
+service/ashulb1 exposed
+[ashu@docker-client ingress-demo]$ kubectl get svc
+NAME      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+ashulb1   ClusterIP   10.102.175.126   <none>        80/TCP    4s
+```
+
+### Ingress rule 
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ashu-ingress-rule
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: www.ashumobi.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ashulb1
+            port:
+              number: 80
+```
+
+### deploy it 
+
+```
+kubectl apply -f rule.yaml 
+ingress.networking.k8s.io/ashu-ingress-rule created
+[ashu@docker-client ingress-demo]$ kubectl get ingress 
+NAME                CLASS   HOSTS              ADDRESS   PORTS   AGE
+ashu-ingress-rule   nginx   www.ashumobi.com             80      11s
+[ashu@docker-client ingress-demo]$ kubectl get ingress 
+NAME                CLASS   HOSTS              ADDRESS         PORTS   AGE
+ashu-ingress-rule   nginx   www.ashumobi.com   172.31.11.164   80      38s
+[ashu@docker-client ingress-demo]$ 
+
+```
+
+
+
