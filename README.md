@@ -246,4 +246,31 @@ echo c25FdGdNR1RFSzk2dHpoag==  |  base64 -d
 snEtgMGTEK96tzhj
 ```
 
+### HELM In k8s 
+
+<img src="helm.png">
+
+### installing on client side 
+
+```
+
+[root@docker-client ~]# ls
+apachespark  helm-v3.9.0-linux-amd64.tar.gz  nginx.tar  users.txt
+[root@docker-client ~]# tar xvf helm-v3.9.0-linux-amd64.tar.gz 
+linux-amd64/
+linux-amd64/helm
+linux-amd64/LICENSE
+linux-amd64/README.md
+[root@docker-client ~]# ls
+apachespark  helm-v3.9.0-linux-amd64.tar.gz  linux-amd64  nginx.tar  users.txt
+[root@docker-client ~]# cd linux-amd64/
+[root@docker-client linux-amd64]# ls
+helm  LICENSE  README.md
+[root@docker-client linux-amd64]# mv helm  /usr/bin/
+[root@docker-client linux-amd64]# helm version 
+version.BuildInfo{Version:"v3.9.0", GitCommit:"7ceeda6c585217a19a1131663d8cd1f7d641b2a7", GitTreeState:"clean", GoVersion:"go1.17.5"}
+[root@docker-client linux-amd64]# 
+
+```
+
 
